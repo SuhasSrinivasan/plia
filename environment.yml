@@ -1,0 +1,11 @@
+name: pli-analyzer
+channels:
+  - defaults
+dependencies:
+  - python=3.8
+  - biopython
+  - numpy
+  - pandas
+  - pip
+  - pip:
+    - BioPython
