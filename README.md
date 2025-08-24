@@ -1,4 +1,4 @@
-# pli-analyzer
+# PLIA
 Protein-ligand interaction analyzer
 
 ## Overview
