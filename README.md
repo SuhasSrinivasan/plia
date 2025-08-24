@@ -98,7 +98,7 @@ For each subdirectory:
 
 Example command executed:
 
-python3 extract_interface.py
+python3 orchestrator.py
 --input_dir <subdir>
 --output_dir <subdir>
 --path_to_voronota <voronota_path>
