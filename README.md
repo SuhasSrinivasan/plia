@@ -87,7 +87,7 @@ Converts `.cif` files to `.pdb`.
 
 2. `new_generate_ref.py`
 
-Generates reference files (`ref_file_updated.csv`) inside each subdirectory.
+Generates reference files (`ref_file_updated.csv`) inside each subdirectory, representing known interaction sites for the given interactor. These interaction sites are determined by cross-referencing the Uniprot ID with Uniprot and InterPro annotations, represented by the CSVs `human_interpro_ppi_domains_consolidated_min3.csv` and `human_uniprot_ppi_sites_min3.csv`
 
 3. `extract_interface.py`
 
