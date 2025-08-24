@@ -1,0 +1,161 @@
+InterPro_ID,InterPro_Name
+IPR000048,"IQ motif, EF-hand binding site"
+IPR000177,Apple domain
+IPR000210,BTB/POZ domain
+IPR000225,Armadillo
+IPR000253,Forkhead-associated (FHA) domain
+IPR000261,EH domain
+IPR000270,PB1 domain
+IPR000357,HEAT repeat
+IPR000406,Rho protein GDP-dissociation inhibitor
+IPR000488,Death domain
+IPR000555,JAB1/MPN/MOV34 metalloenzyme domain
+IPR000593,"RasGAP protein, C-terminal"
+IPR000626,Ubiquitin-like domain
+IPR000959,POLO box domain
+IPR001007,VWFC domain
+IPR001012,UBX domain
+IPR001024,PLAT/LH2 domain
+IPR001090,Ephrin receptor ligand binding domain
+IPR001134,Netrin domain
+IPR001202,WW domain
+IPR001214,SET domain
+IPR001258,NHL repeat
+IPR001298,Filamin/ABP280 repeat
+IPR001368,TNFR/NGFR cysteine-rich region
+IPR001452,SH3 domain
+IPR001478,PDZ domain
+IPR001487,Bromodomain
+IPR001605,"Pleckstrin homology domain, spectrin-type"
+IPR001611,Leucine-rich repeat
+IPR001627,Sema domain
+IPR001660,Sterile alpha motif domain
+IPR001680,WD40 repeat
+IPR001715,Calponin homology domain
+IPR001810,F-box domain
+IPR001875,Death effector domain
+IPR001943,UVR domain
+IPR002017,Spectrin repeat
+IPR002083,MATH/TRAF domain
+IPR002110,Ankyrin repeat
+IPR002172,Low-density lipoprotein (LDL) receptor class A repeat
+IPR002350,Kazal domain
+IPR003018,GAF domain
+IPR003100,PAZ domain
+IPR003102,"Cyclic AMP-responsive element-binding protein 1-like, pKID"
+IPR003151,"PIK-related kinase, FAT"
+IPR003152,FATC domain
+IPR003169,GYF domain
+IPR003307,W2 domain
+IPR003494,SHS2 domain inserted in FtsA
+IPR003536,"Translocated intimin receptor, central domain"
+IPR003652,"Ataxin, AXH domain"
+IPR003877,SPRY domain
+IPR003890,"MIF4G-like, type 3"
+IPR003961,Fibronectin type III
+IPR004148,BAR domain
+IPR004172,L27 domain
+IPR004554,"Hydroxymethylglutaryl-CoA reductase, eukaryotic/archaeal type"
+IPR005036,CBM21 (carbohydrate binding type-21) domain
+IPR005043,"Exportin-2, C-terminal"
+IPR005617,"Groucho/TLE, N-terminal Q-rich domain"
+IPR006575,RWD domain
+IPR006576,BRK domain
+IPR006594,LIS1 homology motif
+IPR006652,Kelch repeat type 1
+IPR006828,Association with the SNF1 complex (ASC) domain
+IPR006910,"Rad21/Rec8-like protein, N-terminal"
+IPR007023,Ribosomal biogenesis regulatory protein
+IPR007526,SWIRM domain
+IPR007809,FlgN-like protein
+IPR008974,TRAF-like
+IPR008983,Tumour necrosis factor-like domain superfamily
+IPR008984,SMAD/FHA domain superfamily
+IPR009033,"Calreticulin/calnexin, P domain superfamily"
+IPR009060,UBA-like superfamily
+IPR009095,"TRADD, N-terminal"
+IPR009590,"Protein Gp5, N-terminal OB-fold domain"
+IPR010402,CCT domain
+IPR010714,"Coatomer, alpha subunit, C-terminal"
+IPR010935,SMCs flexible hinge
+IPR011489,EMI domain
+IPR011498,Kelch repeat type 2
+IPR011930,Cell division protein FtsN
+IPR011990,Tetratricopeptide-like helical domain superfamily
+IPR013625,Tensin/EPS8 phosphotyrosine-binding domain
+IPR013644,"1-deoxy-D-xylulose 5-phosphate reductoisomerase, C-terminal"
+IPR013655,PAS fold-3
+IPR013872,"p53, transactivation domain"
+IPR015284,"Signal recognition particle (SRP) receptor alpha subunit, N-terminal"
+IPR015369,Follistatin/Osteonectin EGF domain
+IPR015915,Kelch-type beta-propeller
+IPR015943,WD40/YVTN repeat-like-containing domain superfamily
+IPR017375,Peroxisome assembly protein 12
+IPR019134,"Splicing factor Cactin, C-terminal"
+IPR019734,Tetratricopeptide repeat
+IPR020067,Frizzled domain
+IPR020981,"Monopolin complex subunit Csm1/Pcs1, C-terminal"
+IPR022316,Tumour necrosis factor receptor 12
+IPR024237,VirE1
+IPR024314,Suppressor of fused C-terminal
+IPR024318,Negative regulator of Ofd1/Enhancer of translation termination 1
+IPR024721,"Snurportin-1, N-terminal"
+IPR024774,"Pleckstrin homology domain, Mcp5-type"
+IPR024855,UNC79
+IPR024945,Spt5 C-terminal domain
+IPR025304,ALIX V-shaped domain
+IPR025655,Peroxisomal membrane protein 14
+IPR025718,"Histone deacetylase complex subunit SAP30, Sin3 binding domain"
+IPR025885,"PapC, N-terminal domain"
+IPR027266,Aminomethyltransferase superfamily
+IPR027393,"Virus scaffolding protein, C-terminal"
+IPR033621,TRAF-interacting protein with FHA domain-containing protein
+IPR033994,"Tumor necrosis factor receptor 1A, death domain"
+IPR033998,"Fas receptor, death domain"
+IPR034029,"Tumour necrosis factor receptor 10A/B, death domain"
+IPR034037,"Tumor necrosis factor receptor 21, death domain"
+IPR034147,"RBM40, RNA recognition motif 1"
+IPR034231,"Ephrin type-B receptor 1, ligand binding domain"
+IPR034238,"Ephrin type-B receptor 2, ligand binding domain"
+IPR034245,"Ephrin type-B receptor 3, ligand binding domain"
+IPR034249,"MyD88, death domain"
+IPR034251,"Ephrin type-A receptor 1, ligand binding domain"
+IPR034263,"Ephrin type-A receptor 2, ligand binding domain"
+IPR034266,"Ephrin type-A receptor 3, ligand binding domain"
+IPR034270,"Ephrin type-A receptor 4, ligand binding domain"
+IPR034277,"Ephrin type-A receptor 5, ligand binding domain"
+IPR034280,"Ephrin type-A receptor 6, ligand binding domain"
+IPR034283,"Ephrin type-A receptor 7, ligand binding domain"
+IPR034287,"Ephrin type-A receptor 8, ligand binding domain"
+IPR034290,"Ephrin type-B receptor 4, ligand binding domain"
+IPR036020,WW domain superfamily
+IPR036028,SH3-like domain superfamily
+IPR036034,PDZ superfamily
+IPR036047,F-box-like domain superfamily
+IPR036055,LDL receptor-like superfamily
+IPR036058,Kazal domain superfamily
+IPR036085,PAZ domain superfamily
+IPR036096,"Ataxin, AXH domain superfamily"
+IPR036116,Fibronectin type III superfamily
+IPR036277,SMCs flexible hinge superfamily
+IPR036322,WD40-repeat-containing domain superfamily
+IPR036392,PLAT/LH2 domain superfamily
+IPR036427,Bromodomain-like superfamily
+IPR036679,FlgN-like superfamily
+IPR036729,"TRADD, N-terminal domain superfamily"
+IPR036790,Frizzled cysteine-rich domain superfamily
+IPR036892,L27 domain superfamily
+IPR036947,POLO box domain superfamily
+IPR037003,"Translocated intimin receptor, central domain superfamily"
+IPR037224,"PapC, N-terminal domain superfamily"
+IPR038175,CBM21 domain superfamily
+IPR043628,DAZ domain
+IPR043937,"Golgin subfamily A , C-terminal binding motif"
+IPR048056,"AUP1, CUE domain"
+IPR048334,"Pellino, FHA domain"
+IPR048371,"Zinc finger HIT domain-containing protein 3, C-terminal domain"
+IPR048492,"Stu2, C-terminal segment"
+IPR048526,"WipA, alpha-helical hairpin"
+IPR048610,"Cohesin subunit SCC3, C-terminal domain"
+IPR049191,"Transcriptional regulator SutA, RNAP-binding domain"
+IPR058026,BNLF2a
