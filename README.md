@@ -10,11 +10,11 @@ This tool extracts the interaction interface of protein, RNA, and DNA complexes 
 1. Install the following dependencies: [miniconda3](https://docs.anaconda.com/miniconda/)
 2. Clone the repository.
 ```
-git clone https://github.com/ChangLab/pli-analyzer.git
+git clone https://github.com/ChangLab/plia.git
 ```
 3. Navigate to the directory
 ```
-cd pli-analyzer
+cd plia
 ```
 
 4. Install dependencies
@@ -25,7 +25,7 @@ conda env create -f environment.yml
 
 5. Activate the environment:
 ```
-conda activate pli-analyzer
+conda activate plia
 ```
 
 6. Install Voronota
@@ -75,7 +75,7 @@ This wrapper script `master_runner.py` automates the workflow for processing pro
 
 The pipeline expects a base directory with subdirectories for each protein complex to process, named in the format:
 
-uniprotid1-uniprotid2
+`uniprotid1-uniprotid2`
 
 Each subdirectory is processed independently, and results are consolidated at the base directory level.
 
@@ -122,7 +122,7 @@ Performs an additional summarization step for related information on IDR % and l
 ### `master_runner.py` Usage
 
 ```
-python3 master_runner.py
+python3 orchestrator.py
 --base_dir /path/to/base/directory
 --voronota_path /path/to/voronota
 [--min_interaction_length 3]
@@ -166,7 +166,7 @@ python3 master_runner.py
 ## Example
 
 ```
-python3 master_runner.py
+python3 orchestrator.py
 --base_dir /Users/user/pli-analyzer/output
 --voronota_path /Users/user/bin/voronota
 --min_interaction_length 5
@@ -177,7 +177,7 @@ python3 master_runner.py
 ### Notes
 
 - Subdirectories **must follow the naming convention**:
-- All helper scripts must be available in the **same directory** as the wrapper (`master_runner.py`).
+- All helper scripts must be available in the **same directory** as the wrapper (`orchestrator.py`).
 - The wrapper stops execution if any required reference file (`ref_file_updated.csv`) is missing in a subdirectory.
 
 
