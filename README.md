@@ -68,7 +68,124 @@ make
 sudo make install
 ```
    
-## Usage
+# PLI-Analyzer Usage
+
+## Overview
+This wrapper script `master_runner.py` automates the workflow for processing protein complex structures and analyzing their interaction interfaces with PLI-analyzer. It orchestrates several helper scripts in sequence, ensuring that input and output files are handled correctly across subdirectories.  
+
+The pipeline expects a base directory with subdirectories for each protein complex to process, named in the format:
+
+uniprotid1-uniprotid2
+
+Each subdirectory is processed independently, and results are consolidated at the base directory level.
+
+## Workflow
+
+1. `cif_to_pdb.py`
+
+Converts `.cif` files to `.pdb`.
+
+2. `new_generate_ref.py`
+
+Generates reference files (`ref_file_updated.csv`) inside each subdirectory.
+
+3. `extract_interface.py`
+
+For each subdirectory:
+
+- Runs interface extraction with Voronota.
+- Filters sequences by interaction length, default = 3.
+
+Example command executed:
+
+python3 extract_interface.py
+--input_dir <subdir>
+--output_dir <subdir>
+--path_to_voronota <voronota_path>
+--ref_file <subdir>/ref_file_updated.csv
+[--inter_output]
+
+
+
+5. `summarize_sequences.py`
+
+Aggregates results into a summary file at the base directory.
+
+python3 summarize_sequences.py <base_dir> --output_csv summary.csv
+
+
+6. `extra_summary.py`
+
+Performs an additional summarization step for related information on IDR % and length.
+
+
+### `master_runner.py` Usage
+
+```
+python3 master_runner.py
+--base_dir /path/to/base/directory
+--voronota_path /path/to/voronota
+[--min_interaction_length 3]
+[--keep_extract_interface]
+[--inter_output]
+```
+
+
+### Required Arguments
+
+- `--base_dir`  
+  Path to the base directory containing subdirectories for each complex.
+
+- `--voronota_path`  
+  Path to the Voronota executable.
+
+### Optional Arguments
+
+- `--min_interaction_length` (default: `3`)  
+  Minimum interaction length. The wrapper internally adds `+2` before passing the value to `filter_sequences.py`.
+
+- `--keep_extract_interface`  
+  If set, `extract_interface.py` will remain in each subdirectory after execution.
+
+- `--inter_output`  
+  If set, adds `--inter_output` to each `extract_interface.py` run. This generates intermediate CSV files with residue-level distances.
+
+## Outputs
+
+### Per Subdirectory
+
+- `ref_file_updated.csv`
+- Extracted interface results
+- (Optional) Intermediate residue-level CSVs (`--inter_output`)
+
+### Base Directory
+
+- `summary.csv` (from `summarize_sequences.py`)
+- Additional outputs from `extra_summary.py`
+
+## Example
+
+```
+python3 master_runner.py
+--base_dir /Users/user/pli-analyzer/output
+--voronota_path /Users/user/bin/voronota
+--min_interaction_length 5
+--inter_output
+```
+
+
+### Notes
+
+- Subdirectories **must follow the naming convention**:
+- All helper scripts must be available in the **same directory** as the wrapper (`master_runner.py`).
+- The wrapper stops execution if any required reference file (`ref_file_updated.csv`) is missing in a subdirectory.
+
+
+
+
+
+
+### As standalone extract_interface.py script
 
 ### Input Parameters
 
@@ -104,32 +221,5 @@ Intermediate CSV: A file is produced for each input PDB/CIF file, and can be tog
 
 Final CSV with interacting sequences.      
 <img width="638" alt="Screen Shot 2024-08-12 at 10 51 42 AM" src="https://github.com/user-attachments/assets/a34a3110-962e-4953-b5b2-aa2ecaa445b3">
-
-
-## Epitope Analysis
-
-Extracts the solvent-accessible surface area (SASA), total surface area, and volume for specified epitope sequence ranges.
-
-### Installation and Usage
-
-1. Install ChimeraX (https://www.cgl.ucsf.edu/chimerax/download.html)
-2. Open epitope_analysis.py and edit the variable in the first line (input_dir) to be the file path to the input directory
-3. In the input directory, create an additional text file named epitope.txt. This text file will contain the sequence ranges you want to query. The first line of the file should contain the sequence chain, for example "/A" or "/B". The following lines should contain each of the ranges, separated by a dash with no spaces (for example, "4-13" or "20-27"). See an example file below.
-<img width="216" alt="Screen Shot 2024-09-02 at 8 11 40 PM" src="https://github.com/user-attachments/assets/659cc0b6-d194-42e8-ad10-847e7d870015">
-<br>
-4. Open ChimeraX
-5. In the top menu, select File -> Open -> epitope_analysis.py
-6. A CSV file will be created in the input directory, outputting the SASA, total surface area, and volume for the sequence ranges across all input PDB files.
-<img width="582" alt="Screen Shot 2024-09-02 at 8 16 40 PM" src="https://github.com/user-attachments/assets/3c1fa7a2-1268-405b-90f2-b27c6885627e">
-
-
-  
-
-
-
-
-
-
-
 
 
