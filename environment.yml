@@ -1,4 +1,4 @@
-name: pli-analyzer
+name: plia
 channels:
   - defaults
 dependencies:
