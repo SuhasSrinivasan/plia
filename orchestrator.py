@@ -25,6 +25,35 @@ Requirements:
 Author: PLIA Project
 """
 
+"""
+Protein-Ligand Interaction Analysis (PLIA) Pipeline Orchestrator
+
+This script orchestrates the complete PLIA analysis pipeline, running all component scripts
+in the correct sequence to analyze protein-protein interactions from structure files to
+final summary statistics. It automates the entire workflow from structure conversion
+through interface extraction to statistical analysis.
+
+Pipeline Steps:
+1. Convert CIF files to PDB format
+2. Generate domain reference files from UniProt data
+3. Extract protein-protein interaction interfaces using Voronota
+4. Filter sequences by length and quality criteria
+5. Generate comprehensive summary statistics
+6. Enhance with additional UniProt metadata
+
+Usage:
+    python orchestrator.py --base_dir /path/to/data --voronota_path /path/to/voronota
+                          --min_interaction_length 3
+
+Requirements:
+    - All PLIA component scripts in the same directory
+    - Voronota software installation
+    - Internet connection for UniProt data access
+    - Required Python libraries (pandas, biopython, requests, etc.)
+
+Author: PLIA Project
+"""
+
 import os
 import subprocess
 import argparse
@@ -32,14 +61,17 @@ import shutil
 
 def run_command(cmd, description):
     """
-    Execute a shell command with error handling and status reporting.
+    Execute a shell command with error handling and progress reporting.
     
     Args:
         cmd (str): Shell command to execute
-        description (str): Description of the operation for user feedback
+        description (str): Human-readable description of the command for logging
         
     Raises:
-        SystemExit: If command fails, exits the program with error status
+        SystemExit: If the command fails, the script exits with error code 1
+        
+    Note:
+        Prints progress indicators and error messages for user feedback
     """
     print(f"🟡 {description}...")
     try:
@@ -52,19 +84,27 @@ def run_command(cmd, description):
 
 def main():
     """
-    Main orchestrator function that coordinates the entire pipeline.
+    Main orchestrator function that parses arguments and executes the complete pipeline.
     
-    This function:
-    1. Parses command line arguments
-    2. Executes each pipeline step in sequence
-    3. Handles file copying and cleanup
-    4. Provides progress feedback to user
+    The function:
+    1. Parses command line arguments for pipeline configuration
+    2. Executes each pipeline step in sequence with error checking
+    3. Manages file copying and cleanup for distributed execution
+    4. Provides comprehensive progress reporting
     
-    Command line arguments:
-        --base_dir: Root directory containing protein pair subdirectories
-        --voronota_path: Path to Voronota executable
-        --min_interaction_length: Minimum sequence length for interactions (default: 3)
-        --keep_extract_interface: Keep temporary script copies in subdirectories
+    Command Line Arguments:
+        --base_dir: Path to base directory containing subdirectories with structure files
+        --voronota_path: Path to Voronota executable directory
+        --min_interaction_length: Minimum interaction sequence length (default: 3)
+        --keep_extract_interface: Keep extract_interface.py copies in subdirectories
+        
+    Pipeline Execution Steps:
+        1. CIF to PDB conversion for all structure files
+        2. Domain reference file generation from UniProt annotations
+        3. Interface extraction using Voronota in each subdirectory
+        4. Sequence filtering by length and model criteria
+        5. Summary statistics generation across all results
+        6. Enhancement with additional UniProt metadata
     """
     parser = argparse.ArgumentParser(description="Run full protein interface analysis pipeline.")
     parser.add_argument('--base_dir', required=True, help="Path to base directory containing subdirectories.")
