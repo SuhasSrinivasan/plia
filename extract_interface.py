@@ -1,4 +1,31 @@
-import Bio.PDB #Imports
+"""
+Protein-Protein Interaction Interface Extractor
+
+This script analyzes protein structures to identify and extract interaction interfaces between
+protein chains using Voronota for contact detection. It compares extracted sequences with
+known binding sites and calculates similarity/identity scores.
+
+Key Features:
+- Supports both PDB and CIF format structures
+- Uses Voronota for accurate contact detection based on Voronoi tessellation
+- Calculates sequence padding around interaction sites
+- Performs sequence alignment against known binding sites
+- Generates comprehensive CSV reports with interaction data
+
+Usage:
+    python extract_interface.py --input_dir /path/to/structures --output_dir /path/to/output
+                               --path_to_voronota /path/to/voronota --ref_file binding_sites.csv
+
+Requirements:
+    - Biopython library
+    - Voronota software
+    - pandas, numpy libraries
+    - Valid protein structure files (PDB/CIF)
+
+Author: PLIA Project
+"""
+
+import Bio.PDB
 from Bio.PDB import *
 import argparse
 import os
@@ -17,54 +44,69 @@ from collections import defaultdict
 import re
 import subprocess
 
+# Standard amino acid 3-letter codes
+STANDARD_AA_NAMES = {
+    'ALA', 'ARG', 'ASN', 'ASP', 'CYS', 'GLU', 'GLN', 'GLY', 'HIS', 'ILE',
+    'LEU', 'LYS', 'MET', 'PHE', 'PRO', 'SER', 'THR', 'TRP', 'TYR', 'VAL'
+}
+
+# Nucleic acid residue names
+NUCLEIC_ACIDS = {"A", "T", "G", "C", "U", "DA", "DT", "DG", "DC", "DU"}
+
 
 
 def is_nucleic_acid(residue):
-    """Checks if a residue is a nucleic acid
+    """
+    Checks if a residue is a nucleic acid.
 
     Args: 
-        residue (residue class object): Accessed through pipeline of structure --> model --> chain --> residue, consists of atoms
+        residue (Bio.PDB.Residue): A residue object accessed through the structure hierarchy
+                                   (structure -> model -> chain -> residue), consists of atoms
 
     Returns:
-        boolean: Whether the residue is a nucleic acid
+        bool: True if the residue is a nucleic acid, False otherwise
 
-    note: A, T, G, etc represent ribonucleic acids, while DA, DT, DG, etc represent deoxyribonucleic acids
+    Note: 
+        Single letters (A, T, G, etc) represent ribonucleic acids, 
+        while two-letter codes (DA, DT, DG, etc) represent deoxyribonucleic acids
     """
-    nucleic_acids = {"A", "T", "G", "C", "U", "DA", "DT", "DG", "DC", "DU"} #Dictionary of nucleic acids
-    return residue.get_resname() in nucleic_acids
+    return residue.get_resname() in NUCLEIC_ACIDS
 
 
 def is_amino_acid(residue):
-    """Checks if residue is amino acid
-
-    Args:
-        residue (residue class): See is_nucleic_acid
-
-    Returns:
-        boolean: Whether the residue is an amino acid
     """
-    return (residue.get_resname() in standard_aa_names) #standard_aa_names is a dictionary with all amino acid codons (3 letters)
-
-
-
-
-def run_padding(chain, position, pad_distance): #Default 1 on each side
-    """Returns a padded sequence of residues around a residue
+    Checks if residue is an amino acid.
 
     Args:
-        chain (list of residue objects): Chain A, B, C, etc
-        position (int): Position of "central" residue that the padding is built around on either side 
-        pad_distance (int): default = 1
+        residue (Bio.PDB.Residue): Residue object from structure hierarchy
 
     Returns:
-        string: Padded Sequence
+        bool: True if the residue is an amino acid, False otherwise
+    """
+    return residue.get_resname() in STANDARD_AA_NAMES
 
-    
+
+
+
+def run_padding(chain, position, pad_distance):
+    """
+    Returns a padded sequence of residues around a central residue.
+
+    Args:
+        chain (list): List of residue objects from a protein chain
+        position (int): Position of "central" residue that the padding is built around
+        pad_distance (int): Number of residues to include on each side (default = 1)
+
+    Returns:
+        str: Padded sequence string
+
     Example:
-
-    Chain A position 5 (arginine) is passed through, with a pad distance of 3
-
-    Returned sequence: "KGGALPS" --> A is in the center, with the 3 residues around it
+        Chain A position 5 (arginine) with pad distance of 3:
+        Returned sequence: "KGGALPS" --> A is in the center, with 3 residues around it
+        
+    Note:
+        Handles cases where position is near chain boundaries and adjusts for
+        non-standard residue numbering in PDB files.
     """
 
     # print("chain[0]", chain[0])
@@ -226,16 +268,15 @@ def calc_dist_matrix(ch1, ch2, model, distance_threshold, pad_distance, path_to_
                             # print("model chain", model[res_pair[0]])
 
                             chain1_res = []
-                            nucleic_acids = {"A", "T", "G", "C", "U", "DA", "DT", "DG", "DC", "DU"}
 
                             for residue in model[res_pair[0]]:
-                                if (residue.get_resname() in standard_aa_names) or (residue.get_resname() in nucleic_acids):
+                                if (residue.get_resname() in STANDARD_AA_NAMES) or (residue.get_resname() in NUCLEIC_ACIDS):
                                     chain1_res.append(residue)
                             
 
                             chain2_res = []
                             for residue in model[res_pair[3]]:
-                                if (residue.get_resname() in standard_aa_names) or (residue.get_resname() in nucleic_acids):
+                                if (residue.get_resname() in STANDARD_AA_NAMES) or (residue.get_resname() in NUCLEIC_ACIDS):
                                     chain2_res.append(residue)
 
                             # print("chain one res", chain1_res)
@@ -267,18 +308,20 @@ def calc_dist_matrix(ch1, ch2, model, distance_threshold, pad_distance, path_to_
 
 
 def create_final_columns(first_residues_num, first_pads):
-    """Synthesizes all of the padded ranges into final "binding interfaces"
+    """
+    Synthesizes all of the padded ranges into final "binding interfaces".
 
     Args:
-        first_residues_num (list): List of residue indicies 
+        first_residues_num (list): List of residue indices 
         first_pads (list): List with all the padded sequences
 
     Returns:
-        final_ranges (list): List containing "final strings" that represent the synthesized ranges
+        list: List containing "final strings" that represent the synthesized ranges
 
-    Note: The final ranges are synthesized by combining any of the padded residue ranges that are continuous. For example, if the residues 8, 9, and 10 
-    have a residue pair < the distance threshold with sequences ANNL, NNLG, and NLGG, the final range would be ANNLGG
-
+    Note: 
+        The final ranges are synthesized by combining any of the padded residue ranges that are 
+        continuous. For example, if the residues 8, 9, and 10 have a residue pair < the distance 
+        threshold with sequences ANNL, NNLG, and NLGG, the final range would be ANNLGG
     """
     for i, res in enumerate(first_residues_num):
         first_residues_num[i] = int(res)
@@ -319,31 +362,35 @@ def create_final_columns(first_residues_num, first_pads):
 
 
 def calculate_similarity(score, seq2):
-    """Given the "score" of the best alignment, returns the percentage of bases that are an exact match (what the score is score)
-
+    """
+    Given the "score" of the best alignment, returns the percentage of bases that are an exact match.
 
     Args:
         score (int): Score of the best alignment generated by the aligner -> alignments[0]
-        seq2 (string): Shorter sequence that is being aligned to the binding site
+        seq2 (str): Shorter sequence that is being aligned to the binding site
 
     Returns:
         float: Percentage sequence similarity
     """
-
-    length = (len(seq2)) #calculates based off of the 
+    length = len(seq2)  # Calculate based off the query sequence length
     return (score / length) * 100
 
 
 
-def sequence_alignments(binding_sites, seq2): #seq1 is the longer sequence, seq2 is the shorter sequence
-    """Given the binding site and comparison sequence, return the alignment with the highest % sequence similarity. note: gaps are allowed and not penalized
-
+def sequence_alignments(binding_sites, seq2):
+    """
+    Given the binding site and comparison sequence, return the alignment with the highest % sequence similarity.
+    
     Args:
-        binding_sites (list <string>): Known binding sites from the input csv
-        seq2 (string): Shorter sequence that is being aligned to the binding site
+        binding_sites (list): Known binding sites from the input CSV
+        seq2 (str): Shorter sequence that is being aligned to the binding site
 
     Returns:
-        float: Highest similarity score (as percentage, so 0 - 100)
+        float: Highest similarity score (as percentage, 0-100)
+        
+    Note:
+        Uses global alignment with gaps allowed and not penalized. Only exact matches
+        contribute to the similarity score.
     """
 
     scores = []
@@ -378,14 +425,23 @@ def sequence_alignments(binding_sites, seq2): #seq1 is the longer sequence, seq2
 
 
 def identity_score(binding_sites, seq2):
-    """Calculates the identity score between the input sequence and inputted binding sites (different from similarity scores in that no gaps are allowed)
+    """
+    Calculates the identity score between the input sequence and inputted binding sites.
+    
+    Different from similarity scores in that no gaps are allowed - uses sliding window approach.
 
     Args:
-        binding_sites (list <string>): Binding sites from the input csv
-        seq2 (string): Sequence that is being compared to the binding site
+        binding_sites (list): Binding sites from the input CSV
+        seq2 (str): Sequence that is being compared to the binding site
 
     Returns:
-        float: Percentage identity score (0 - 100)
+        tuple: (percentage_identity, best_matching_site)
+            - percentage_identity (float): Percentage identity score (0-100)
+            - best_matching_site (str): The binding site with highest identity
+            
+    Note:
+        Uses a sliding window approach to find the best local alignment without gaps.
+        Automatically handles sequences of different lengths.
     """
     scores = []
     for k, seq1 in enumerate(binding_sites):
@@ -421,23 +477,21 @@ def identity_score(binding_sites, seq2):
 
 
 def aa_residues(chain):
-
-    """Removes residues that aren't a nucleic or amino acid
+    """
+    Removes residues that aren't a nucleic or amino acid.
 
     Args:
-        chain (chain class object): Chain A, B, etc
+        chain (Bio.PDB.Chain): Chain A, B, etc from a protein structure
 
     Returns:
-        (list): List of only the amino acid + nucleic acid residues
+        list: List of only the amino acid + nucleic acid residues
+        
+    Note:
+        Filters out water molecules, ligands, and other non-standard residues
     """
-    # print("am i running these??")
-
-    nucleic_acids = {"A", "T", "G", "C", "U", "DA", "DT", "DG", "DC", "DU"}
-
     aa_only = []
     for i in chain:
-        if (i.get_resname() in standard_aa_names) or (i.get_resname() in nucleic_acids):
-            # print(i, "getting added")
+        if (i.get_resname() in STANDARD_AA_NAMES) or (i.get_resname() in NUCLEIC_ACIDS):
             aa_only.append(i)
     return aa_only
 
@@ -447,17 +501,18 @@ def aa_residues(chain):
 #####################
 
 def extract_structure(file_path, file_type):
-    """Given a file path and type, it uses the corresponding parser to extract the structure object
+    """
+    Given a file path and type, it uses the corresponding parser to extract the structure object
 
     Args:
-        file_path (string): Path to PDB/CIF file
-        file_type (string): CIF or PDB
+        file_path (str): Path to PDB/CIF file
+        file_type (str): CIF or PDB
 
     Raises:
         ValueError: file type besides CIF or PDB
 
     Returns:
-        Structure class object: Biopython object in the hierarchy of Structure --> Model  -> Chain --> Residue --> Atom
+        Bio.PDB.Structure: Biopython object in the hierarchy of Structure --> Model  -> Chain --> Residue --> Atom
     """
     if file_type == 'cif':
         parser = MMCIFParser(QUIET=True)
@@ -471,32 +526,40 @@ def extract_structure(file_path, file_type):
     return structure
 
 def remove_empty_values(dict):
-    """removes empty list values in a dictionary
+    """
+    Removes empty list values in a dictionary
 
     Args:
-        dict (dictionary): dictionary of lists
+        dict (dict): dictionary of lists
 
     Returns:
-        dictionary: dictionary with blank values removed
+        dict: dictionary with blank values removed
     """
     return {k: [v for v in val if v != ""] for k, val in dict.items()}
 
 
 def create_csv(model, chain_number_1, chain_number_2, pdb_name, file_path, distance_threshold, pad_distance, binding_sites, path_to_voro, area_threshold):
-    """Puts all of the elements together to create a csv between two chains
+    """
+    Puts all of the elements together to create a CSV between two chains.
 
     Args:
-        model (model class): Subunit of a structure
-        chain_number_1 (chain class): Chain 1
-        chain_number_2 (chain class): Chain 2
-        pdb_name (string): PDB name, for example "5tph"
-        distance_threshold (int): Threshold for residue distances
+        model (Bio.PDB.Model): Subunit of a structure
+        chain_number_1 (int): Chain 1 number (1-based indexing)
+        chain_number_2 (int): Chain 2 number (1-based indexing)
+        pdb_name (str): PDB name, for example "5tph"
+        file_path (str): Path to the PDB/CIF file
+        distance_threshold (float): Threshold for residue distances (Angstroms)
         pad_distance (int): Distance for padding on both sides
-        binding_sites (list <strings>): Binding sites from input csv
+        binding_sites (dict): Binding sites from input CSV
+        path_to_voro (str): Path to Voronota directory
+        area_threshold (float): Area threshold for contact detection
 
     Returns:
-        df (Pandas dataframe): Intermediate CSV for each PDB/CIF file
-        df_2 (Pandas dataframe): Sequence range information that is synthesized into the final_sequences.csv
+        tuple: (df, df_2, sim_scores_1_copy, id_scores_1_copy, final_ranges_1_copy, 
+                sim_scores_2_copy, id_scores_2_copy, final_ranges_2_copy, bind_sites_1, bind_sites_2)
+            - df (pandas.DataFrame): Intermediate CSV for each PDB/CIF file
+            - df_2 (pandas.DataFrame): Sequence range information
+            - Additional score and range data for both chains
     """
 
     d = dict(enumerate(string.ascii_uppercase, 1))
@@ -663,17 +726,23 @@ def create_csv(model, chain_number_1, chain_number_2, pdb_name, file_path, dista
 
 
 def main(input_dir, output_dir, path_to_voro, binding_file_name, area_threshold, distance_threshold, pad_distance, inter_output):
-    """Iterates through all appropriate input files and runs them, synthesizing sequence ranges together to make the final sequence CSV  
+    """
+    Iterates through all appropriate input files and runs them, synthesizing sequence ranges together to make the final sequence CSV.
 
     Args:
-        input_dir (string): File path to input directory
-        output_dir (string): File path to output directory (Will make the folder if it doesn't exist)
-        path_to_voro (string): Path to directory where Voronota is installed
-        binding_file_name (string): Path to CSV file containing known interaction sequences
-        area_threshold (float): area threshold for overlap between Voronoi tesselations to consider two residues as in contact.
-        distance_threshold (float): Distance threshold (in Angstroms) for interacting residues (optional, default = None).
-        pad_distance (int): Number of residues added as padding on either side of the actual interacting residue (optional, default = 1).
-        inter_output (bool): Does not create intermediate CSV files (optional, default = False).
+        input_dir (str): File path to input directory
+        output_dir (str): File path to output directory (Will make the folder if it doesn't exist)
+        path_to_voro (str): Path to directory where Voronota is installed
+        binding_file_name (str): Path to CSV file containing known interaction sequences
+        area_threshold (float): Area threshold for overlap between Voronoi tesselations to consider two residues as in contact
+        distance_threshold (float): Distance threshold (in Angstroms) for interacting residues (optional, default = None)
+        pad_distance (int): Number of residues added as padding on either side of the actual interacting residue (optional, default = 1)
+        inter_output (bool): Whether to create intermediate CSV files (optional, default = False)
+        
+    Note:
+        This function processes all PDB and CIF files in the input directory, analyzes 
+        all possible chain pairs within each structure, and generates comprehensive 
+        reports of protein-protein interactions.
     """
 
 
@@ -816,6 +885,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     main(args.input_dir, args.output_dir, args.path_to_voronota, args.ref_file, args.area, args.distance, args.padding, args.inter_output)
-
-
-
