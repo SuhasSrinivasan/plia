@@ -1,8 +1,42 @@
+"""
+Sequence Length Filter for Final Sequences
+
+This script filters and processes final_sequences.csv files in subdirectories, removing
+sequences that don't meet minimum length requirements and applying formatting rules.
+It specifically targets model_0 files and removes padding characters from sequences.
+
+Usage:
+    python filter_sequences.py --root_dir /path/to/directory --min_length 5
+
+Requirements:
+    - pandas library
+    - Existing final_sequences.csv files in subdirectories
+
+Author: PLIA Project
+"""
+
 import os
 import pandas as pd
 import argparse
 
 def main(root_dir, min_length):
+    """
+    Main function that processes final_sequences.csv files in subdirectories.
+    
+    This function:
+    1. Recursively searches for final_sequences.csv files
+    2. Filters sequences by minimum length and model type
+    3. Removes padding characters (first and last character)
+    4. Saves filtered results to final_sequences_updated.csv
+    
+    Args:
+        root_dir (str): Root directory to search for final_sequences.csv files
+        min_length (int): Minimum sequence length to retain after filtering
+        
+    Note:
+        Only processes sequences from 'model_0' files and removes first/last characters
+        as padding before applying length filter.
+    """
     # iterate through subdirectories
     for subdir, _, files in os.walk(root_dir):
         if 'final_sequences.csv' in files:
