@@ -1,9 +1,46 @@
+"""
+PLIA Pipeline Orchestrator
+
+This script orchestrates the complete protein-ligand interaction analysis pipeline by running
+all necessary scripts in sequence. It handles the full workflow from structure conversion
+to final data summarization.
+
+Pipeline Steps:
+1. Convert CIF files to PDB format
+2. Generate reference domain files
+3. Extract protein interfaces using Voronota
+4. Filter sequences by length
+5. Summarize sequence data
+6. Enhance with UniProt information
+
+Usage:
+    python orchestrator.py --base_dir /path/to/data --voronota_path /path/to/voronota
+                          --min_interaction_length 3
+
+Requirements:
+    - All PLIA pipeline scripts in the same directory
+    - Voronota software installed
+    - Internet connection for UniProt data
+
+Author: PLIA Project
+"""
+
 import os
 import subprocess
 import argparse
 import shutil
 
 def run_command(cmd, description):
+    """
+    Execute a shell command with error handling and status reporting.
+    
+    Args:
+        cmd (str): Shell command to execute
+        description (str): Description of the operation for user feedback
+        
+    Raises:
+        SystemExit: If command fails, exits the program with error status
+    """
     print(f"🟡 {description}...")
     try:
         subprocess.run(cmd, shell=True, check=True)
@@ -14,6 +51,21 @@ def run_command(cmd, description):
         exit(1)
 
 def main():
+    """
+    Main orchestrator function that coordinates the entire pipeline.
+    
+    This function:
+    1. Parses command line arguments
+    2. Executes each pipeline step in sequence
+    3. Handles file copying and cleanup
+    4. Provides progress feedback to user
+    
+    Command line arguments:
+        --base_dir: Root directory containing protein pair subdirectories
+        --voronota_path: Path to Voronota executable
+        --min_interaction_length: Minimum sequence length for interactions (default: 3)
+        --keep_extract_interface: Keep temporary script copies in subdirectories
+    """
     parser = argparse.ArgumentParser(description="Run full protein interface analysis pipeline.")
     parser.add_argument('--base_dir', required=True, help="Path to base directory containing subdirectories.")
     parser.add_argument('--voronota_path', required=True, help="Path to Voronota executable.")
