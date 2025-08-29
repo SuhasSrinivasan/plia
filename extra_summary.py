@@ -1,3 +1,22 @@
+"""
+UniProt Information Enhancer for Summary Data
+
+This script enhances the existing summary.csv file by fetching additional protein information 
+from UniProt including gene names, sequence lengths, intrinsically disordered region (IDR) 
+lengths, and percentage of IDR content for each protein pair.
+
+Usage:
+    python extra_summary.py /path/to/base/directory
+
+Requirements:
+    - pandas library
+    - requests library
+    - Internet connection for UniProt API access
+    - Existing summary.csv file in the base directory
+
+Author: PLIA Project
+"""
+
 import pandas as pd
 import requests
 import time
@@ -5,6 +24,22 @@ import os
 import argparse
 
 def get_uniprot_info(uniprot_id):
+    """
+    Fetch protein information from UniProt REST API.
+    
+    Args:
+        uniprot_id (str): UniProt accession ID (e.g., 'P12345')
+    
+    Returns:
+        tuple: (gene_name, sequence_length, idr_total_length, percent_idr)
+            - gene_name (str): Gene name or 'UNKNOWN' if not found
+            - sequence_length (int): Total amino acid sequence length
+            - idr_total_length (int): Total length of intrinsically disordered regions
+            - percent_idr (float): Percentage of sequence that is disordered
+    
+    Note:
+        Includes a 1-second delay between requests to be respectful to UniProt servers
+    """
     url = f"https://rest.uniprot.org/uniprotkb/{uniprot_id}.json"
     try:
         response = requests.get(url)
@@ -35,6 +70,23 @@ def get_uniprot_info(uniprot_id):
         return "UNKNOWN", None, None, None
 
 def main(base_dir):
+    """
+    Main function that processes the summary.csv file and enhances it with UniProt data.
+    
+    This function:
+    1. Reads the existing summary.csv file
+    2. Extracts UniProt IDs from subfolder names
+    3. Fetches protein information for each UniProt ID
+    4. Adds new columns with gene names, sequence lengths, IDR information
+    5. Saves the enhanced data back to summary.csv
+    
+    Args:
+        base_dir (str): Path to directory containing summary.csv file
+        
+    Note:
+        The function expects subfolder names to follow the pattern 'UNIPROT1_UNIPROT2_output'
+        and will skip malformed entries while logging warnings.
+    """
     input_path = os.path.join(base_dir, "summary.csv")
 
     df = pd.read_csv(input_path)
@@ -72,8 +124,9 @@ def main(base_dir):
         pidrs_2.append(pidr2)
         gene_labels.append(f"{gene1}_{gene2}")
 
-        time.sleep(1)  # Be gentle with UniProt servers
+        time.sleep(1)  # Be respectful to UniProt servers
 
+    # Add new columns to the dataframe
     df["gene_name_1"] = gene_names_1
     df["seq_len_1"] = lengths_1
     df["idr_len_1"] = idrs_1
