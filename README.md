@@ -1,5 +1,5 @@
 # PLIA
-Protein-ligand interaction analyzer
+Protein-ligand interaction analyzer to validate AI generated biomolecular complex structures.
 
 ## Overview
 
