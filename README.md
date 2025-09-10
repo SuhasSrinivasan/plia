@@ -120,7 +120,7 @@ Performs an additional summarization step for related information on IDR % and l
 ### `orchestrator.py` Usage
 
 ```
-python3 orchestrator.py
+python orchestrator.py
 --base_dir <path to base dir with subdirs>
 --voronota_path <path to voronota executable>
 [--min_interaction_length 3]
