@@ -1,16 +1,16 @@
 # PLIA
-Protein-ligand interaction analyzer to validate AI generated biomolecular complex structures.
+Protein-ligand interaction analyzer (PLIA) to validate AI generated biomolecular complex structures.
 
 ## Overview
 
-This tool extracts the interaction interface of protein, RNA, and DNA complexes and can compare it to known sequences of binding domains/motifs or to other structures.
+This tool extracts the interaction interface of protein, RNA, and DNA complexes and can compare it to known sequences of binding motifs and interaction domains or to interfaces of other complexes.
 
 ## Installation
 
-1. Install the following dependencies: [miniconda3](https://docs.anaconda.com/miniconda/)
-2. Clone the repository.
+1. Install [miniconda3](https://docs.anaconda.com/miniconda/).
+2. Clone the PLIA repository.
 ```
-git clone https://github.com/ChangLab/plia.git
+git clone https://github.com/SuhasSrinivasan/plia.git
 ```
 3. Navigate to the directory
 ```
@@ -32,7 +32,7 @@ conda activate plia
 
 Voronota calculates atom contacts through the Voronoi diagram of atomic balls. 
 
-Access the Github Repo here https://github.com/kliment-olechnovic/voronota
+Access the GitHub repository [here](https://github.com/kliment-olechnovic/voronota).
 
 #### Quick Install Guide
 
@@ -66,7 +66,7 @@ make
 sudo make install
 ```
    
-# PLI-Analyzer Usage
+# PLIA Usage
 
 ## Overview
 This wrapper script `orchestrator.py` automates the workflow for processing protein complex structures and analyzing their interaction interfaces with PLI-analyzer.   
