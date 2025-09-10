@@ -28,8 +28,6 @@ conda env create -f environment.yml
 conda activate plia
 ```
 
-6. Install Voronota
-
 ### Installing Voronota
 
 Voronota calculates atom contacts through the Voronoi diagram of atomic balls. 
@@ -95,24 +93,22 @@ For each subdirectory:
 
 - Runs interface extraction with Voronota.
 - Filters sequences by interaction length, default = 3.
-
-Example command executed:
-
-python3 orchestrator.py
+```
+python orchestrator.py
 --input_dir <subdir>
 --output_dir <subdir>
 --path_to_voronota <voronota_path>
 --ref_file <subdir>/ref_file_updated.csv
 [--inter_output]
-
+```
 
 
 5. `summarize_sequences.py`
 
 Aggregates results into a summary file at the base directory.
-
-python3 summarize_sequences.py <base_dir> --output_csv summary.csv
-
+```
+python summarize_sequences.py <base_dir> --output_csv summary.csv
+```
 
 6. `extra_summary.py`
 
