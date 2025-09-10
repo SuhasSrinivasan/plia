@@ -32,7 +32,7 @@ conda activate plia
 
 Voronota calculates atom contacts through the Voronoi diagram of atomic balls. 
 
-Access the GitHub repoistory [here](https://github.com/kliment-olechnovic/voronota).
+Access the GitHub repository [here](https://github.com/kliment-olechnovic/voronota).
 
 #### Quick Install Guide
 
