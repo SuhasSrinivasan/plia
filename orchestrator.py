@@ -14,11 +14,8 @@ Pipeline Steps:
 6. Enhance with additional UniProt metadata
 
 Usage:
-    python orchestrator.py 
-    --base_dir <path to base dir with subdirs>
-    --voronota_path <path to voronota executable>
-    --min_interaction_length < 3 >
-    --inter_output <optional, generates intermediate CSVs with residue distances>
+    python orchestrator.py --base_dir /path/to/base/dir/with/subdirs --voronota_path /path/to/voronota/executable
+                           --min_interaction_length < 3 > --inter_output <optional, generates intermediate CSVs with residue distances>
 
 Requirements:
     - All PLIA component scripts in the same directory
