@@ -7,34 +7,6 @@ to final data summarization.
 
 Pipeline Steps:
 1. Convert CIF files to PDB format
-2. Generate reference domain files
-3. Extract protein interfaces using Voronota
-4. Filter sequences by length
-5. Summarize sequence data
-6. Enhance with UniProt information
-
-Usage:
-    python orchestrator.py --base_dir /path/to/data --voronota_path /path/to/voronota
-                          --min_interaction_length 3
-
-Requirements:
-    - All PLIA pipeline scripts in the same directory
-    - Voronota software installed
-    - Internet connection for UniProt data
-
-Author: PLIA Project
-"""
-
-"""
-Protein-Ligand Interaction Analysis (PLIA) Pipeline Orchestrator
-
-This script orchestrates the complete PLIA analysis pipeline, running all component scripts
-in the correct sequence to analyze protein-protein interactions from structure files to
-final summary statistics. It automates the entire workflow from structure conversion
-through interface extraction to statistical analysis.
-
-Pipeline Steps:
-1. Convert CIF files to PDB format
 2. Generate domain reference files from UniProt data
 3. Extract protein-protein interaction interfaces using Voronota
 4. Filter sequences by length and quality criteria
@@ -42,14 +14,17 @@ Pipeline Steps:
 6. Enhance with additional UniProt metadata
 
 Usage:
-    python orchestrator.py --base_dir /path/to/data --voronota_path /path/to/voronota
-                          --min_interaction_length 3
+    python orchestrator.py 
+    --base_dir <path to base dir with subdirs>
+    --voronota_path <path to voronota executable>
+    --min_interaction_length < 3 >
+    --inter_output <optional, generates intermediate CSVs with residue distances>
 
 Requirements:
     - All PLIA component scripts in the same directory
-    - Voronota software installation
-    - Internet connection for UniProt data access
     - Required Python libraries (pandas, biopython, requests, etc.)
+    - Voronota installation
+    - Internet connection for UniProt data access
 
 Author: PLIA Project
 """
