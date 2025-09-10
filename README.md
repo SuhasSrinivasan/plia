@@ -69,7 +69,8 @@ sudo make install
 # PLI-Analyzer Usage
 
 ## Overview
-This wrapper script `master_runner.py` automates the workflow for processing protein complex structures and analyzing their interaction interfaces with PLI-analyzer. It orchestrates several helper scripts in sequence, ensuring that input and output files are handled correctly across subdirectories.  
+This wrapper script `orchestrator.py` automates the workflow for processing protein complex structures and analyzing their interaction interfaces with PLI-analyzer.   
+It coordinates several helper scripts in sequence, ensuring that input and output files are handled correctly across subdirectories.  
 
 The pipeline expects a base directory with subdirectories for each protein complex to process, named in the format:
 
@@ -85,16 +86,17 @@ Converts `.cif` files to `.pdb`.
 
 2. `new_generate_ref.py`
 
-Generates reference files (`ref_file_updated.csv`) inside each subdirectory, representing known interaction sites for the given interactor. These interaction sites are determined by cross-referencing the Uniprot ID with Uniprot and InterPro annotations, represented by the CSVs `tables/human_interpro_ppi_domains_consolidated_min3.csv` and `tables/human_uniprot_ppi_sites_min3.csv`
+Generates reference files (`ref_file_updated.csv`) inside each subdirectory, representing known interaction sites for the given interactor.   
+These interaction sites are determined by cross-referencing the Uniprot ID with Uniprot and InterPro annotations, represented by the CSVs `tables/human_interpro_ppi_domains_consolidated_min3.csv` and `tables/human_uniprot_ppi_sites_min3.csv`
 
 3. `extract_interface.py`
 
 For each subdirectory:
 
-- Runs interface extraction with Voronota.
+- Runs interface extraction.
 - Filters sequences by interaction length, default = 3.
 ```
-python orchestrator.py
+python extract_interface.py
 --input_dir <subdir>
 --output_dir <subdir>
 --path_to_voronota <voronota_path>
@@ -115,12 +117,12 @@ python summarize_sequences.py <base_dir> --output_csv summary.csv
 Performs an additional summarization step for related information on IDR % and length.
 
 
-### `master_runner.py` Usage
+### `orchestrator.py` Usage
 
 ```
 python3 orchestrator.py
---base_dir /path/to/base/directory
---voronota_path /path/to/voronota
+--base_dir <path to base dir with subdirs>
+--voronota_path <path to voronota executable>
 [--min_interaction_length 3]
 [--keep_extract_interface]
 [--inter_output]
@@ -159,26 +161,12 @@ python3 orchestrator.py
 - `summary.csv` (from `summarize_sequences.py`)
 - Additional outputs from `extra_summary.py`
 
-## Example
-
-```
-python3 orchestrator.py
---base_dir /Users/user/pli-analyzer/output
---voronota_path /Users/user/bin/voronota
---min_interaction_length 5
---inter_output
-```
-
 
 ### Notes
 
 - Subdirectories **must follow the naming convention**:
 - All helper scripts must be available in the **same directory** as the wrapper (`orchestrator.py`).
 - The wrapper stops execution if any required reference file (`ref_file_updated.csv`) is missing in a subdirectory.
-
-
-
-
 
 
 ### As standalone extract_interface.py script
