@@ -189,8 +189,6 @@ python orchestrator.py
 ```
 python extract_interface.py --input_dir <path_to_dir> --output_dir <path_to_dir> --path_to_voronota <path_to_voronota> --ref_file <path_to_ref_file> --padding 2 
 ```
-
-Note: Voronota currently only supports PDB files— compatibility with CIF files will be added to this code later.
    
 ### Reference File Format
 
