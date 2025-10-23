@@ -5,6 +5,12 @@ Protein-ligand interaction analyzer (PLIA) to validate AI generated biomolecular
 
 This tool extracts the interaction interface of protein, RNA, and DNA complexes and can compare it to known sequences of binding motifs and interaction domains or to interfaces of other complexes.
 
+**Suggested Citation**   
+Liang F, Srinivasan S, Chang HY. PLI Analyzer for Data-driven Validation of AI Predicted Biomolecular Interfaces. bioRxiv. 2025:2025-09.   
+    
+**bioRxiv**   
+https://doi.org/10.1101/2025.09.29.678845
+
 ## Installation
 
 1. Install [miniconda3](https://docs.anaconda.com/miniconda/).
