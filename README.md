@@ -1,5 +1,5 @@
 # PLIA
-Protein-ligand interaction analyzer (PLIA) to validate AI generated biomolecular complex structures.
+Protein-ligand interaction analyzer (PLIA) is a structural bioinformatics tool to validate AI generated biomolecular complex structures.
 
 ## Overview
 
